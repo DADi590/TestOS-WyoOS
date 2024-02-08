@@ -17,29 +17,16 @@
 // specific language governing permissions and limitations
 // under the License.
 
-#ifndef TESTOS_GDT_H
-#define TESTOS_GDT_H
+#ifndef TESTOS_IDT_H
+#define TESTOS_IDT_H
 
 
-#include <stdint.h>
-#include "BinaryStructs.h"
 
 /**
- * @brief Prepares and loads the GDT into the processor.
+ * @brief Prepares and loads the IDT into the processor and sets the interrupt flag.
  */
-void lockNLoadGDT(void);
-
-/**
- * @brief Gets the offset of the given segment descriptor in relation to the beginning of the GDT.
- *
- * @param segment_descriptor the address of the target GDT segment descriptor
- *
- * @return the offset from the beginning of the GDT
- */
-uint16_t getSegDescriptorOffset(struct SegmentDescriptor const *segment_descriptor);
-
-extern struct GDT gdt;
+void lockNLoadIDT(void);
 
 
 
-#endif //TESTOS_GDT_H
+#endif //TESTOS_IDT_H

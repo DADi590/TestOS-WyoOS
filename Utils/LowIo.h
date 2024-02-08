@@ -17,29 +17,34 @@
 // specific language governing permissions and limitations
 // under the License.
 
-#ifndef TESTOS_GDT_H
-#define TESTOS_GDT_H
+#ifndef TESTOS_LOWIO_H
+#define TESTOS_LOWIO_H
+
 
 
 #include <stdint.h>
-#include "BinaryStructs.h"
 
 /**
- * @brief Prepares and loads the GDT into the processor.
+ * @brief Wrapper for the OUT x86 instruction.
+ *
+ * @param port_addr target port address
+ * @param value value to output to the given port
  */
-void lockNLoadGDT(void);
+inline void out(uint32_t port_addr, uint32_t value);
+/**
+ * @brief Wrapper for the IN x86 instruction.
+ *
+ * @param port_addr target port address
+ *
+ * @return the value returned by the given port
+ */
+inline uint32_t in(uint32_t port_addr);
 
 /**
- * @brief Gets the offset of the given segment descriptor in relation to the beginning of the GDT.
- *
- * @param segment_descriptor the address of the target GDT segment descriptor
- *
- * @return the offset from the beginning of the GDT
+ * @brief Wait 1 to 4 microseconds by outputting 0 to an unused port (0x80).
  */
-uint16_t getSegDescriptorOffset(struct SegmentDescriptor const *segment_descriptor);
-
-extern struct GDT gdt;
+inline void io_wait(void);
 
 
 
-#endif //TESTOS_GDT_H
+#endif //TESTOS_LOWIO_H

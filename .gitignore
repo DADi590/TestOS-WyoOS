@@ -21,6 +21,9 @@ UsefulPrivate/
 *.iso
 *.o
 
+# NOTE: THE ISO HAS GPL CODE IN IT - NO DISTRIBUTION UNDER THE APACHE LICENSE!!! (Meaning, don't remove the *.iso entry)
+# Read more about that (the problem is only the GRUB code on the ISO): https://wiki.osdev.org/Bare_Bones, the "Warning".
+
 ###############################
 
 

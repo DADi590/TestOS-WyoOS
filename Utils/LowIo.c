@@ -17,17 +17,27 @@
 // specific language governing permissions and limitations
 // under the License.
 
-#ifndef TESTOS_STDIO_H
-#define TESTOS_STDIO_H
+#include "LowIo.h"
 
+inline void out(uint32_t port_addr, uint32_t value) {
+	__asm__(
+			"out     %0, %1;"
+			:
+			: "d" (port_addr), "a" (value)
+			);
+}
 
+inline uint32_t in(uint32_t port_addr) {
+	uint32_t value = 0;
+	__asm__(
+			"in      %0, %1;"
+			: "=a" (value)
+			: "d" (port_addr)
+			);
 
-#include <stdint-gcc.h>
+	return value;
+}
 
-void printC(char c);
-void printS(char const *str);
-void printNu(uint32_t num);
-
-
-
-#endif //TESTOS_STDIO_H
+inline void io_wait(void) {
+	out(0x80, 0);
+}

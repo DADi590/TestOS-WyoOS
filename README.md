@@ -4,7 +4,7 @@ A small Operating System for me to gain knowledge on OS development, with help o
 ## Introduction
 As I know very little to 0 about OS development and kernel stuff, I decided I'd try to create a small operating system for x86 so that I get knowledge on that darker part of programming ahah.
 
-I'm following the videos from this playlist: https://www.youtube.com/channel/UCQdZltW7bh1ta-_nCH7LWYw_ - thank you so much to Viktor Engelmann for making it. I finally found a good guide to make one (aside from wiki.osdev.org, but that takes much more time and I'd like a quicker introduction so that after that I can dive deeper more slowly).
+I'm following the videos from this playlist: https://www.youtube.com/channel/UCQdZltW7bh1ta-_nCH7LWYw_ - thank you so much to Viktor Engelmann for making it. I finally found a good guide to make one (aside from https://wiki.osdev.org, but that takes much more time and I'd like a quicker introduction so that after that I can dive deeper more slowly).
 
 Aside from following the playlist, I may also try to implement my own things. For example so far, after the 3rd lesson I decided to make some print functions to print characters, strings and numbers. The numbers one was already useful for me to see a mistake on the GDT preparation (I was shifting a wrong number of bits).
 

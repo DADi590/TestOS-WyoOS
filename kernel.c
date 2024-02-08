@@ -17,17 +17,53 @@
 // specific language governing permissions and limitations
 // under the License.
 
-#include "gdt.h"
-#include "CFuncs/stdio.h"
+#include "Gdt.h"
+#include "CLibs/stdio.h"
+#include "Idt.h"
 #include <stdbool.h>
-#include <stdint-gcc.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdnoreturn.h>
 
-void kernelMain(void const *multiboot_struct, uint32_t magic_number) {
-	printS("Hello, World!\n");
+/*
+ * ALLOWED C STANDARD LIBRARIES TO USE (because of freestanding environment)
+ * <float.h>
+ * <limits.h>
+ * <stdarg.h>
+ * <stddef.h>
+ * <iso646.h>
+ * <stdbool.h>
+ * <stdint.h>
+ * <stdalign.h>
+ * <stdnoreturn.h>
+ * This is up to date with up to the C17 standard (checked in 2022-10-14).
+ */
 
-	prepareGDT();
+noreturn void kernelNoExit(void);
 
-	printS("\nWhile true...");
+/**
+ * @brief The Kernel's main function.
+ *
+ * @param multiboot_struct the multiboot struct given by the bootloader
+ * @param magic_number the multiboot magic number given by the bootloader
+ */
+noreturn void kernelMain(__attribute__((unused)) void const *multiboot_struct,
+                         __attribute__((unused)) uint32_t magic_number) {
+	// todo GRUB also provides a memory map, whatever that is - go see about it.
+
+	resetScreen();
+	printf("TestOS\n\n");
+
+	lockNLoadGDT();
+	//lockNLoadIDT(); // fixme IDT is throwing a critical error on VirtualBox. Fix it.
+
+
+
+	kernelNoExit();
+}
+
+noreturn void kernelNoExit(void) {
+	printf("\nWhile true...");
 	while (true) {
 		// So that the kernel doesn't stop
 	}

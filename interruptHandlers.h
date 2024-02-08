@@ -17,29 +17,23 @@
 // specific language governing permissions and limitations
 // under the License.
 
-#ifndef TESTOS_GDT_H
-#define TESTOS_GDT_H
+#ifndef TESTOS_INTERRUPTHANDLERS_H
+#define TESTOS_INTERRUPTHANDLERS_H
+
 
 
 #include <stdint.h>
-#include "BinaryStructs.h"
 
 /**
- * @brief Prepares and loads the GDT into the processor.
- */
-void lockNLoadGDT(void);
-
-/**
- * @brief Gets the offset of the given segment descriptor in relation to the beginning of the GDT.
+ * @brief Handle processor interrupts
  *
- * @param segment_descriptor the address of the target GDT segment descriptor
+ * @param int_num number of interruption
+ * @param esp the current ESP (Stack Pointer) value
  *
- * @return the offset from the beginning of the GDT
+ * @return the 'esp' parameter
  */
-uint16_t getSegDescriptorOffset(struct SegmentDescriptor const *segment_descriptor);
-
-extern struct GDT gdt;
+uint32_t interruptHandler(__attribute__((unused)) uint8_t int_num, uint32_t esp);
 
 
 
-#endif //TESTOS_GDT_H
+#endif //TESTOS_INTERRUPTHANDLERS_H

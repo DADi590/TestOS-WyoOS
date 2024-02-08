@@ -17,16 +17,36 @@
 // specific language governing permissions and limitations
 // under the License.
 
-#ifndef TESTOS_PORT_H
-#define TESTOS_PORT_H
+#ifndef TESTOS_STDIO_H
+#define TESTOS_STDIO_H
 
 
 
-#include <stdint-gcc.h>
+#include <stdint.h>
 
-void out(uint32_t port_addr, uint32_t value);
-uint32_t in(uint32_t port_addr);
+/**
+ * @brief Prints a character on the screen and advanced the last printed position.
+ *
+ * @param c the character to print
+ */
+void printC(char c);
+/**
+ * @brief Read the official printf documentation, this works like the standard one, except it doesn't offer all
+ * conversions.
+ *
+ * To know which conversions are accepted, check the function code.
+ */
+int printf(char const *fmt_str, ...) __attribute__ ((format(printf, 1, 2)));
+/**
+ * @brief Prints an unsigned integer of at most 32 bits to the screen.
+ *
+ * @param num the number to print
+ */
+int printN32u(uint32_t num);
+/**
+ * @brief Resets the VGA state to empty and the cursor X and Y positions to 0.
+ */
+void resetScreen(void);
 
 
-
-#endif //TESTOS_PORT_H
+#endif //TESTOS_STDIO_H

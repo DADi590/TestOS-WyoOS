@@ -17,23 +17,16 @@
 // specific language governing permissions and limitations
 // under the License.
 
-#include "port.h"
+#ifndef TESTOS_UTILS_H
+#define TESTOS_UTILS_H
 
-void out(uint32_t port_addr, uint32_t value) {
-	__asm__(
-			"out     %0, %1;"
-			:
-			: "d" (port_addr), "a" (value)
-			);
-}
 
-uint32_t in(uint32_t port_addr) {
-	uint32_t value = 0;
-	__asm__(
-			"in      %0, %1;"
-			: "=a" (value)
-			: "d" (port_addr)
-			);
 
-	return value;
-}
+/**
+ * @brief Prints a kernel panic message and enters a infinite loop doing nothing.
+ */
+void kernelPanic(void);
+
+
+
+#endif //TESTOS_UTILS_H

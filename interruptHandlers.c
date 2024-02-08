@@ -17,29 +17,34 @@
 // specific language governing permissions and limitations
 // under the License.
 
-#ifndef TESTOS_GDT_H
-#define TESTOS_GDT_H
-
-
+#include "InterruptHandlers.h"
 #include <stdint.h>
-#include "BinaryStructs.h"
+#include "CLibs/stdio.h"
 
-/**
- * @brief Prepares and loads the GDT into the processor.
- */
-void lockNLoadGDT(void);
+uint8_t interrupt_number = 0;
 
-/**
- * @brief Gets the offset of the given segment descriptor in relation to the beginning of the GDT.
- *
- * @param segment_descriptor the address of the target GDT segment descriptor
- *
- * @return the offset from the beginning of the GDT
- */
-uint16_t getSegDescriptorOffset(struct SegmentDescriptor const *segment_descriptor);
+__asm__("intHandlerWrapper:\n"
+		"push    ds\n"
+		"push    es\n"
+		"push    fs\n"
+		"push    gs\n"
+		"pusha\n"
+		"\n"
+		"push    esp\n"
+		"push    interrupt_number\n"
+		"call    interruptHandler\n"
+		// No need to clean up the stack, since we're setting ESP to a new value here.
+		"mov     esp, eax\n"
+		"\n"
+		"popa\n"
+		"pop    gs\n"
+		"pop    fs\n"
+		"pop    es\n"
+		"pop    ds\n"
+		"iret\n"); // IRET must be used here: https://wiki.osdev.org/Interrupt_Service_Routines
 
-extern struct GDT gdt;
+uint32_t interruptHandler(uint8_t int_num, uint32_t esp) {
+	printf("INTERRUPT %u\n", int_num);
 
-
-
-#endif //TESTOS_GDT_H
+	return esp;
+}

@@ -17,29 +17,28 @@
 // specific language governing permissions and limitations
 // under the License.
 
-#ifndef TESTOS_GDT_H
-#define TESTOS_GDT_H
+#include "C_runtime.h"
+#include "CLibs/stdio.h"
+#include "KernelUtils.h"
+#include "Utils/MemReadWrite.h"
+#include <stddef.h>
 
+void __stack_chk_fail_local(void) {
+	uint32_t i = 0;
+	uint32_t esp = 0;
+	const uint32_t MAX_ADDRS = 10;
 
-#include <stdint.h>
-#include "BinaryStructs.h"
+	printf("\nSTACK ATTACK DETECTED. Stacktrace for %u addresses:\n", MAX_ADDRS);
 
-/**
- * @brief Prepares and loads the GDT into the processor.
- */
-void lockNLoadGDT(void);
+	__asm__ volatile (
+			"mov    [%0], esp"
+			: "=m" (esp)
+			:
+			);
 
-/**
- * @brief Gets the offset of the given segment descriptor in relation to the beginning of the GDT.
- *
- * @param segment_descriptor the address of the target GDT segment descriptor
- *
- * @return the offset from the beginning of the GDT
- */
-uint16_t getSegDescriptorOffset(struct SegmentDescriptor const *segment_descriptor);
+	for (i = 0; i < MAX_ADDRS; ++i, ++esp) {
+		printf("%u: %u\n", esp, 0 != esp ? readMem32i(esp) : 0);
+	}
 
-extern struct GDT gdt;
-
-
-
-#endif //TESTOS_GDT_H
+	kernelPanic();
+}
