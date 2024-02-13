@@ -21,29 +21,22 @@
 #include "BinaryStructs.h"
 #include "CLibs/stdio.h"
 #include "Gdt.h"
-#include "InterruptHandlers.h"
-#include "Utils/MemReadWrite.h"
 #include <stdbool.h>
-#include <stdint.h>
-
-#define PIC1		    0x20 /* IO base address for master PIC */
-#define PIC2		    0xA0 /* IO base address for slave PIC */
-#define PIC1_COMMAND    PIC1
-#define PIC1_DATA	    (PIC1+1)
-#define PIC2_COMMAND    PIC2
-#define PIC2_DATA	    (PIC2+1)
-
-typedef struct {
-	uint16_t limit;
-	uint32_t base;
-} __attribute__((packed)) idtr32_t;
 
 static bool idt_ready = false;
-__attribute__((aligned(0x10))) //This line wasn't here from the video. Start following the wiki instead, and only check with the video what you have to do and if it's well done.
-// https://wiki.osdev.org/Interrupts_tutorial - todo search for (and see what it is) idt_entry_t and idt_desc_t, and rename here to that.
-static struct GateDescriptor32 idt[256];
 
-static void encodeIDTEntryOffset(struct GateDescriptor32 *target, uint32_t offset);
+__attribute__((aligned(0x10)))
+static GateDescriptor32 idt[256]; // Create an array of IDT entries; aligned for performance
+static IDTR32 idtr;
+extern void *isrStubTable[];
+
+/**
+ * @brief Sets the descriptor for the given vector.
+ *
+ * @param vector the vector number
+ * @param isr the address of the ISR
+ */
+static void idtSetDescriptor(uint8_t vector, void *isr);
 
 void lockNLoadIDT(void) {
 	if (idt_ready) {
@@ -52,26 +45,17 @@ void lockNLoadIDT(void) {
 		return;
 	}
 
-	for (int i = 0; i < 256; ++i) {
-		encodeIDTEntryOffset(&idt[i], 0);
-		idt[i].selector = getSegDescriptorOffset(&gdt.kernel_code_seg);
-		idt[i].gate_type = 0xE;
-		idt[i].privilege_level = 0;
-		idt[i].present = 1;
+	for (uint8_t vector = 0; vector < 32; vector++) {
+		idtSetDescriptor(vector, isrStubTable[vector]);
 	}
 
-	// Must be 6 bytes, and I'm starting at position 0 of the 1st byte (easier with inline-asm...).
-	idtr32_t idt_info[2];
-	idt_info->limit = sizeof(idt) - 1;
-	// These are already linear addresses - read what you wrote on the GDT equivalent code.
-	idt_info->base |= (uint32_t) &idt;
-
-	// todo https://wiki.osdev.org/PIC#Initialisation, video 55:06+
+	idtr.offset = (uintptr_t) &idt[0];
+	idtr.size = sizeof(idt) / sizeof(GateDescriptor32) - 1;
 
 	__asm__ volatile (
 			"lidt    %0"
 			:
-			: "m" (idt_info)
+			: "m" (idtr)
 			);
 	__asm__("sti");
 
@@ -80,13 +64,13 @@ void lockNLoadIDT(void) {
 	idt_ready = true;
 }
 
-/**
- * @brief Encode the given offset into the given gate descriptor.
- *
- * @param target the target descriptor
- * @param limit the offset to apply
- */
-static void encodeIDTEntryOffset(struct GateDescriptor32 *target, uint32_t offset) {
-	writeMem16((uint8_t *) target + (0*2), (uint16_t) offset);
-	writeMem16((uint8_t *) target + (3*2), (uint16_t) (offset >> (2*8u)));
+static void idtSetDescriptor(uint8_t vector, void *isr) {
+	GateDescriptor32 *descriptor = &idt[vector];
+
+	descriptor->isr_low        = (uintptr_t) isr & 0xFFFF;
+	descriptor->kernel_cs      = getSegDescriptorOffset(&gdt.kernel_code_seg); // this value can be whatever offset your kernel code selector is in your GDT
+	descriptor->present	       = 1;
+	descriptor->gate_type      = 0xE; // 32-bit interrupt gate
+	descriptor->privilege_lvl  = 0;
+	descriptor->isr_high       = (uintptr_t) isr >> 16;
 }

@@ -3,7 +3,7 @@ FLAGS_STD := -masm=intel -std=c17 -g3
 # Don't remove the optimizations: https://wiki.osdev.org/C#Things_you_should_know_about_optimizations
 FLAGS_OPTIM := #-funroll-loops -O3
 # Unsigned char because I may (and do, currently) use a char in bitwise operations, so I'm making them all unsigned.
-FLAGS_DIALECT := -funsigned-char
+FLAGS_DIALECT := #-funsigned-char
 # -Warith-conversion is not working so far (26-09-2022, updated GCC, WSL)
 FLAGS_WARN_COMP_ERR := -Werror -Wpedantic -pedantic-errors -Wall -Wextra -Wformat=2 -Wformat-overflow=2 \
 	-Wformat-signedness -Wnull-dereference -Winit-self -Wparentheses -Wshift-overflow=2 -Wswitch-default -Wswitch-enum \
@@ -22,7 +22,7 @@ LDPARAMS := -m elf_i386 $(WARN_LINK_ERR) -z noexecstack
 
 objects = CLibs/stdio.o \
 	Utils/LowIo.o Utils/MemReadWrite.o \
-	C_runtime.o Gdt.o Idt.o InterruptHandlers.o Kernel.o KernelUtils.o Loader.o
+	C_runtime.o Gdt.o Idt.o InterruptHandlers.o InterruptStubs.o Kernel.o KernelUtils.o Loader.o
 
 %.o: %.c
 	gcc $(GCCPARAMS) -o $@ -c $^

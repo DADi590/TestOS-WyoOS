@@ -19,7 +19,7 @@
 
 #include "LowIo.h"
 
-inline void out(uint32_t port_addr, uint32_t value) {
+void out(uint32_t port_addr, uint32_t value) {
 	__asm__(
 			"out     %0, %1;"
 			:
@@ -27,7 +27,7 @@ inline void out(uint32_t port_addr, uint32_t value) {
 			);
 }
 
-inline uint32_t in(uint32_t port_addr) {
+uint32_t in(uint32_t port_addr) {
 	uint32_t value = 0;
 	__asm__(
 			"in      %0, %1;"
@@ -38,6 +38,6 @@ inline uint32_t in(uint32_t port_addr) {
 	return value;
 }
 
-inline void io_wait(void) {
+void io_wait(void) {
 	out(0x80, 0);
 }

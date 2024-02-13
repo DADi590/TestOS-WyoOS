@@ -17,34 +17,16 @@
 // specific language governing permissions and limitations
 // under the License.
 
-#include "InterruptHandlers.h"
-#include <stdint.h>
 #include "CLibs/stdio.h"
 
-uint8_t interrupt_number = 0;
+void interruptHandler(uint8_t int_num) {
+	printf("Interrupt detected. IRQ %u\n", int_num);
 
-__asm__("intHandlerWrapper:\n"
-		"push    ds\n"
-		"push    es\n"
-		"push    fs\n"
-		"push    gs\n"
-		"pusha\n"
-		"\n"
-		"push    esp\n"
-		"push    interrupt_number\n"
-		"call    interruptHandler\n"
-		// No need to clean up the stack, since we're setting ESP to a new value here.
-		"mov     esp, eax\n"
-		"\n"
-		"popa\n"
-		"pop    gs\n"
-		"pop    fs\n"
-		"pop    es\n"
-		"pop    ds\n"
-		"iret\n"); // IRET must be used here: https://wiki.osdev.org/Interrupt_Service_Routines
+	__asm__ volatile ("cli; hlt"); // Completely hangs the computer
+}
 
-uint32_t interruptHandler(uint8_t int_num, uint32_t esp) {
-	printf("INTERRUPT %u\n", int_num);
+void exceptionHandler(uint32_t int_num) {
+	printf("Exception detected. Number: %u\n", int_num);
 
-	return esp;
+	__asm__ volatile ("cli; hlt"); // Completely hangs the computer
 }

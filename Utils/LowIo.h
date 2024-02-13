@@ -30,7 +30,7 @@
  * @param port_addr target port address
  * @param value value to output to the given port
  */
-inline void out(uint32_t port_addr, uint32_t value);
+void out(uint32_t port_addr, uint32_t value);
 /**
  * @brief Wrapper for the IN x86 instruction.
  *
@@ -38,12 +38,12 @@ inline void out(uint32_t port_addr, uint32_t value);
  *
  * @return the value returned by the given port
  */
-inline uint32_t in(uint32_t port_addr);
+uint32_t in(uint32_t port_addr);
 
 /**
  * @brief Wait 1 to 4 microseconds by outputting 0 to an unused port (0x80).
  */
-inline void io_wait(void);
+void io_wait(void);
 
 
 

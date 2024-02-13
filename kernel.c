@@ -21,8 +21,6 @@
 #include "CLibs/stdio.h"
 #include "Idt.h"
 #include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
 #include <stdnoreturn.h>
 
 /*
@@ -55,7 +53,7 @@ noreturn void kernelMain(__attribute__((unused)) void const *multiboot_struct,
 	printf("TestOS\n\n");
 
 	lockNLoadGDT();
-	//lockNLoadIDT(); // fixme IDT is throwing a critical error on VirtualBox. Fix it.
+	lockNLoadIDT();
 
 
 

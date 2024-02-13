@@ -17,14 +17,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-#include "C_runtime.h"
 #include "CLibs/stdio.h"
 #include "KernelUtils.h"
 #include "Utils/MemReadWrite.h"
-#include <stddef.h>
 
 void __stack_chk_fail_local(void) {
-	uint32_t i = 0;
 	uint32_t esp = 0;
 	const uint32_t MAX_ADDRS = 10;
 
@@ -36,7 +33,7 @@ void __stack_chk_fail_local(void) {
 			:
 			);
 
-	for (i = 0; i < MAX_ADDRS; ++i, ++esp) {
+	for (uint32_t i = 0; i < MAX_ADDRS; ++i, ++esp) {
 		printf("%u: %u\n", esp, 0 != esp ? readMem32i(esp) : 0);
 	}
 

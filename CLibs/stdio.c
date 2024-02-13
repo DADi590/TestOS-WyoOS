@@ -81,12 +81,10 @@ int printf(char const *fmt_str, ...) {
 		if ('%' == fmt_str[i]) {
 			switch (fmt_str[++i]) {
 				case 's': {
-					char *str = va_arg(args_list, char *);
-					int j = 0;
-					for (j = 0; '\0' != str[j]; ++j) {
+					const char *str = va_arg(args_list, char *);
+					for (int j = 0; '\0' != str[j]; ++j, ++num_printed_chars) {
 						printC(str[j]);
 					}
-					num_printed_chars += j; // j here is the number of chars
 
 					break;
 				}
@@ -96,7 +94,6 @@ int printf(char const *fmt_str, ...) {
 
 					break;
 				}
-				case 'd': // This is wrong, but whatever, just remember not to use negative numbers
 				case 'u': {
 					num_printed_chars += printN32u(va_arg(args_list, unsigned int));
 

@@ -28,18 +28,18 @@ void writeMem64(void *addr, uint64_t data);
 void writeMem32(void *addr, uint32_t data);
 void writeMem16(void *addr, uint16_t data);
 void writeMem8(void *addr, uint8_t data);
-void writeMem64i(uint32_t addr, uint64_t data);
-void writeMem32i(uint32_t addr, uint32_t data);
-void writeMem16i(uint32_t addr, uint16_t data);
-void writeMem8i(uint32_t addr, uint8_t data);
+void writeMem64i(uintptr_t addr, uint64_t data);
+void writeMem32i(uintptr_t addr, uint32_t data);
+void writeMem16i(uintptr_t addr, uint16_t data);
+void writeMem8i(uintptr_t addr, uint8_t data);
 uint64_t readMem64(void const *addr);
 uint32_t readMem32(void const *addr);
 uint16_t readMem16(void const *addr);
 uint8_t readMem8(void const *addr);
-uint64_t readMem64i(uint32_t addr);
-uint32_t readMem32i(uint32_t addr);
-uint16_t readMem16i(uint32_t addr);
-uint8_t readMem8i(uint32_t addr);
+uint64_t readMem64i(uintptr_t addr);
+uint32_t readMem32i(uintptr_t addr);
+uint16_t readMem16i(uintptr_t addr);
+uint8_t readMem8i(uintptr_t addr);
 
 
 
