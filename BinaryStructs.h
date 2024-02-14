@@ -65,10 +65,10 @@ typedef struct SegmentDescriptor {
  * @brief The GDT, as loaded to the processor.
  */
 typedef struct GDT {
-	struct SegmentDescriptor null_seg_descriptor;
-	struct SegmentDescriptor kernel_code_seg;
-	struct SegmentDescriptor kernel_data_seg;
-	struct SegmentDescriptor task_state_seg;
+	SegmentDescriptor null_seg_descriptor;
+	SegmentDescriptor kernel_code_seg;
+	SegmentDescriptor kernel_data_seg;
+	SegmentDescriptor task_state_seg;
 } __attribute__((packed)) GDT;
 
 /**

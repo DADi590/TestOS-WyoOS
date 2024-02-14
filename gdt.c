@@ -63,6 +63,24 @@ void lockNLoadGDT(void) {
 			: "r" (gdt_info)
 			);
 
+	// Reload the segment registers to make the changes take effect.
+	// The "0x08" is the offset of the kernel code segment in the GDT.
+	// The "0x10" is the offset of the kernel data segment in the GDT.
+	__asm__ volatile (
+			"pusha\n"
+			"jmp     0x08:reloadCS\n"
+			"reloadCS:\n"
+			"mov     AX, 0x10\n"
+			"mov     DS, AX\n"
+			"mov     ES, AX\n"
+			"mov     FS, AX\n"
+			"mov     GS, AX\n"
+			"mov     SS, AX\n"
+			"popa"
+			:
+			:
+			);
+
 	printf("GDT ready\n");
 
 	gdt_ready = true;
