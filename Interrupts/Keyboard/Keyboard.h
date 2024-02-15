@@ -17,32 +17,17 @@
 // specific language governing permissions and limitations
 // under the License.
 
-#include "../CLibs/stdio.h"
-#include "Pic.h"
-#include "Keyboard/Keyboard.h"
+//
+// Created by Edw590 on 15/02/2024.
+//
 
-void interruptHandler(uint32_t irq) {
-	if (irq == 1) {
-		keyboardInterruptHandler();
-	} else {
-		printf("Interrupt detected. IRQ %u\n", irq);
-	}
+#ifndef TESTOS_KEYBOARD_H
+#define TESTOS_KEYBOARD_H
 
-	sendEOI((uint8_t) irq); // Send the EOI command to the PIC
-}
 
-void exceptionHandlerNoErr(uint32_t exc_num) {
-	printf("Exception detected. Number: %u\n", exc_num);
 
-	sendEOI((uint8_t) exc_num); // Send the EOI command to the PIC
-}
+void keyboardInterruptHandler(void);
 
-void exceptionHandlerErr(uint32_t exc_num, uint32_t err_code) {
-	printf("Exception detected. Number: %u. Error code: %u\n", exc_num, err_code);
 
-	if (exc_num == 13) {
-		__asm__ volatile ("cli; hlt"); // Completely hangs the computer
-	}
 
-	sendEOI((uint8_t) exc_num); // Send the EOI command to the
-}
+#endif //TESTOS_KEYBOARD_H

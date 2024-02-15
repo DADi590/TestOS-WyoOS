@@ -73,7 +73,8 @@ SECTION .text
 	extern exceptionHandlerErr
 	global asm_isrStubTable
 
-	; Err vs NoErr means that the ISR will push an error code onto the stack vs not pushing
+	; Exceptions
+	; Err vs NoErr means that the CPU will push an error code onto the stack vs not pushing
 	IsrNoErrStub  0
 	IsrNoErrStub  1
 	IsrNoErrStub  2
@@ -107,6 +108,7 @@ SECTION .text
 	IsrErrStub    30
 	IsrNoErrStub  31
 
+	; IRQs
 	; This infinity is just for me to be able to return the number of the interrupt
 	IntHandler 32
     IntHandler 33

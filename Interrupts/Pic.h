@@ -29,12 +29,12 @@
 #include <stdint.h>
 
 /**
- * @brief Initializes the Programmable Interrupt Controller (PIC).
+ * @brief Initializes the Programmable Interrupt Controllers (PIC).
  */
 void initPICs(void);
 
 /**
- * @brief Sends the End Of Interrupt (EOI) command to the PIC.
+ * @brief Sends the End Of Interrupt (EOI) command to the PIC(s).
  *
  * @param irq_num the IRQ number to send the EOI command to
  */

@@ -18,7 +18,9 @@ set(CMAKE_C_FLAGS "-std=c17 -m32 -masm=intel -g3 \
 	-Wredundant-decls -Winline -Wstack-protector \
 ")
 
-add_executable(TestOS kernel.c GDT/Gdt.c GDT/Gdt.h CLibs/stdio.c CLibs/stdio.h Interrupts/Idt.c Interrupts/Idt.h Interrupts/InterruptHandlers.c BinaryStructs.h c_runtime.c Utils/KernelUtils.c Utils/KernelUtils.h Utils/MemReadWrite.c Utils/MemReadWrite.h Utils/LowIo.c Utils/LowIo.h
+add_executable(TestOS kernel.c Gdt/Gdt.c Gdt/Gdt.h CLibs/stdio.c CLibs/stdio.h Interrupts/Idt.c Interrupts/Idt.h Interrupts/InterruptHandlers.c BinaryStructs.h c_runtime.c Utils/KernelUtils.c Utils/KernelUtils.h Utils/MemReadWrite.c Utils/MemReadWrite.h Utils/LowIo.c Utils/LowIo.h
         Interrupts/Pic.c
         Interrupts/Pic.h
-        Utils/General.h)
+        Utils/General.h
+        Interrupts/Keyboard/Keyboard.c
+        Interrupts/Keyboard/Keyboard.h)

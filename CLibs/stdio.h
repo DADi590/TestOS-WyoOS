@@ -47,6 +47,10 @@ int printN32u(uint32_t num);
  * @brief Resets the VGA state to empty and the cursor X and Y positions to 0.
  */
 void resetScreen(void);
+/**
+ * @brief Erases the last printed character.
+ */
+void eraseChar(void);
 
 
 

@@ -56,6 +56,20 @@ static bool processCtrlChar(char c) {
 	return false;
 }
 
+void eraseChar(void) {
+	if (0 == curr_cursor_x) {
+		if (0 == curr_cursor_y) {
+			return;
+		}
+		--curr_cursor_y;
+		curr_cursor_x = HORIZ_CHARS - 1;
+	} else {
+		--curr_cursor_x;
+	}
+	uint16_t offset_erase = (80 * curr_cursor_y) + curr_cursor_x;
+	VIDEO_MEM_ADDR[offset_erase] = (VIDEO_MEM_ADDR[offset_erase] & 0xFF00u) | ' ';
+}
+
 void printC(char c) {
 	uint16_t offset_print = (80 * curr_cursor_y) + curr_cursor_x;
 
@@ -89,7 +103,7 @@ int printf(char const *fmt_str, ...) {
 					break;
 				}
 				case 'c': {
-					printC(va_arg(args_list, int));
+					printC((char) va_arg(args_list, int));
 					++num_printed_chars;
 
 					break;
