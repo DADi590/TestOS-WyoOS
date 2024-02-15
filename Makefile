@@ -20,9 +20,12 @@ ASPARAMS := --32
 WARN_LINK_ERR := --fatal-warnings --warn-common
 LDPARAMS := -m elf_i386 $(WARN_LINK_ERR) -z noexecstack
 
-objects = CLibs/stdio.o \
-	Utils/LowIo.o Utils/MemReadWrite.o \
-	C_runtime.o Gdt.o Idt.o InterruptHandlers.o InterruptStubs.o Kernel.o KernelUtils.o Loader.o Pic.o
+objects = \
+	CLibs/stdio.o \
+	Utils/KernelUtils.o Utils/LowIo.o Utils/MemReadWrite.o \
+	GDT/Gdt.o \
+	Interrupts/Idt.o Interrupts/InterruptHandlers.o Interrupts/InterruptStubs.o Interrupts/Pic.o \
+	C_runtime.o Kernel.o Loader.o
 
 %.o: %.c
 	gcc $(GCCPARAMS) -o $@ -c $^

@@ -18,10 +18,10 @@
 // under the License.
 
 #include "Idt.h"
-#include "BinaryStructs.h"
-#include "CLibs/stdio.h"
-#include "Gdt.h"
-#include "Utils/General.h"
+#include "../BinaryStructs.h"
+#include "../GDT/Gdt.h"
+#include "../Utils/LowIo.h"
+#include "Pic.h"
 #include <stdbool.h>
 
 static bool idt_ready = false;
@@ -29,8 +29,7 @@ static bool idt_ready = false;
 __attribute__((aligned(0x10)))
 static GateDescriptor32 idt[256]; // Create an array of IDT entries; aligned for performance
 static IDTR32 idtr;
-extern void *isrStubTable[];
-extern funcptr_t(asm_interruptIgnore);
+extern void *asm_isrStubTable[];
 
 /**
  * @brief Sets the descriptor for the given vector.
@@ -40,16 +39,13 @@ extern funcptr_t(asm_interruptIgnore);
  */
 static void idtSetDescriptor(int vector, void *isr);
 
-void lockNLoadIDT(void) {
+void lockNLoadIDTAndPICs(void) {
 	if (idt_ready) {
 		return;
 	}
 
-	for (int vector = 0; vector < 32; vector++) {
-		idtSetDescriptor(vector, isrStubTable[vector]);
-	}
-	for (int vector = 32; vector < 256; vector++) {
-		idtSetDescriptor(vector, &asm_interruptIgnore);
+	for (int vector = 0; vector < 256; vector++) {
+		idtSetDescriptor(vector, asm_isrStubTable[vector]);
 	}
 
 	idtr.offset = (uintptr_t) &idt[0];
@@ -60,6 +56,13 @@ void lockNLoadIDT(void) {
 			:
 			: "m" (idtr)
 			);
+
+	// This is here to avoid a race condition. Right before the interrupts are enabled, the PICs are remapped.
+	initPICs();
+	// Disable all IRQs except for the keyboard
+	outb(0x21,0xFD);
+	outb(0xa1,0xFF);
+
 	__asm__("sti");
 
 	idt_ready = true;

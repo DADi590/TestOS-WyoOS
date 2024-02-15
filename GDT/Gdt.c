@@ -19,8 +19,8 @@
 
 #include "Gdt.h"
 #include <stdint.h>
-#include "CLibs/stdio.h"
-#include "Utils/MemReadWrite.h"
+#include "../CLibs/stdio.h"
+#include "../Utils/MemReadWrite.h"
 #include <stdbool.h>
 
 static void encodeGdtEntryBase(SegmentDescriptor *target, uint32_t base);

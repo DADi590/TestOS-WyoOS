@@ -17,10 +17,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
-#include "Gdt.h"
+#include "GDT/Gdt.h"
 #include "CLibs/stdio.h"
-#include "Idt.h"
-#include "Pic.h"
+#include "Interrupts/Idt.h"
 #include <stdbool.h>
 #include <stdnoreturn.h>
 
@@ -60,10 +59,9 @@ noreturn void kernelMain(__attribute__((unused)) void const *multiboot_struct,
 
 	printf("Initializing GDT...\n");
 	lockNLoadGDT();
-	printf("Initializing IDT...\n");
-	lockNLoadIDT();
-	printf("Initializing PICs...\n");
-	initPICs(); //fixme #GP Fault if enabled
+
+	printf("Initializing IDT and PICs...\n");
+	lockNLoadIDTAndPICs();
 
 
 
@@ -71,7 +69,7 @@ noreturn void kernelMain(__attribute__((unused)) void const *multiboot_struct,
 }
 
 noreturn void kernelNoExit(void) {
-	printf("\nWhile true...");
+	printf("\nWhile true...\n-------------------------\n");
 	while (true) {
 		// So that the kernel doesn't stop
 	}

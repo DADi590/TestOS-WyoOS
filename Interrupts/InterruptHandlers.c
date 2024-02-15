@@ -17,16 +17,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
-#include "CLibs/stdio.h"
+#include "../CLibs/stdio.h"
 #include "Pic.h"
-
-void interruptIgnore(void) {
-	printf("Interrupt ignored\n");
-
-	//sendEOI((uint8_t) int_num); // Send the EOI command to the PIC
-
-	//__asm__ volatile ("cli; hlt"); // Completely hangs the computer
-}
 
 void interruptHandler(uint32_t int_num) {
 	printf("Interrupt detected. IRQ %u\n", int_num);

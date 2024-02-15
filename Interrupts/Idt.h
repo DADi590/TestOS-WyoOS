@@ -25,7 +25,7 @@
 /**
  * @brief Prepares and loads the IDT into the processor and sets the interrupt flag.
  */
-void lockNLoadIDT(void);
+void lockNLoadIDTAndPICs(void);
 
 
 

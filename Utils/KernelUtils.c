@@ -17,7 +17,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-#include "CLibs/stdio.h"
+#include "../CLibs/stdio.h"
 #include "KernelUtils.h"
 #include <stdbool.h>
 #include <stdnoreturn.h>

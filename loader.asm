@@ -59,7 +59,7 @@ SECTION .rodata
 SECTION .bss
 		align 16
 	stack_bottom:
-		resb 2*1024*1024 ; 2 MiB. Must be multiple of 16 (1024 is, so just leave those 2 there and multiply by whatever)
+		resb 8*1024*1024 ; 8 MiB. Must be multiple of 16 (1024 is, so just leave those 2 there and multiply by whatever)
 	stack_top:
 		dummy_byte db 0 ; If I don't put this here, GCC will put stack_top out of the segment, in another segment (???)
 

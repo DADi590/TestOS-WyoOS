@@ -18,7 +18,7 @@
 // under the License.
 
 #include "CLibs/stdio.h"
-#include "KernelUtils.h"
+#include "Utils/KernelUtils.h"
 #include "Utils/MemReadWrite.h"
 
 void __stack_chk_fail_local(void) {

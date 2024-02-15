@@ -22,7 +22,7 @@
 
 
 #include <stdint.h>
-#include "BinaryStructs.h"
+#include "../BinaryStructs.h"
 
 /**
  * @brief Prepares and loads the GDT into the processor.

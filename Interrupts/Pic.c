@@ -18,7 +18,7 @@
 // under the License.
 
 #include <stdint.h>
-#include "Utils/LowIo.h"
+#include "../Utils/LowIo.h"
 
 #define PIC1		0x20		/* IO base address for master PIC */
 #define PIC2		0xA0		/* IO base address for slave PIC */
@@ -91,8 +91,8 @@ arguments:
 	offset2 - same for slave PIC: offset2..offset2+7
 */
 void initPICs(void) {
-	uint8_t a1 = inb(PIC1_DATA);                // save masks
-	uint8_t a2 = inb(PIC2_DATA);
+	//uint8_t a1 = inb(PIC1_DATA);                // save masks
+	//uint8_t a2 = inb(PIC2_DATA);
 
 	outb(PIC1_COMMAND, ICW1_INIT | ICW1_ICW4);  // starts the initialization sequence (in cascade mode)
 	io_wait();
@@ -112,10 +112,10 @@ void initPICs(void) {
 	outb(PIC2_DATA, ICW4_8086);
 	io_wait();
 
-	outb(PIC1_DATA, a1);                        // restore saved masks.
-	outb(PIC2_DATA, a2);
+	//outb(PIC1_DATA, a1);                        // restore saved masks.
+	//outb(PIC2_DATA, a2);
 
 	// Unmask all IRQs
-	//outb(PIC1_DATA, 0x0);
-	//outb(PIC2_DATA, 0x0);
+	outb(PIC1_DATA, 0x0);
+	outb(PIC2_DATA, 0x0);
 }
