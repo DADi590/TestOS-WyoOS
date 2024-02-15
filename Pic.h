@@ -17,38 +17,29 @@
 // specific language governing permissions and limitations
 // under the License.
 
-#ifndef TESTOS_LOWIO_H
-#define TESTOS_LOWIO_H
+//
+// Created by Edw590 on 14/02/2024.
+//
+
+#ifndef TESTOS_PIC_H
+#define TESTOS_PIC_H
 
 
 
 #include <stdint.h>
 
 /**
- * @brief Wrapper for the OUT x86 instruction.
- *
- * @param port_addr target port address
- * @param value value to output to the given port
+ * @brief Initializes the Programmable Interrupt Controller (PIC).
  */
-void outb(uint16_t port_addr, uint8_t value);
-void outw(uint16_t port_addr, uint16_t value);
-void outl(uint16_t port_addr, uint32_t value);
-/**
- * @brief Wrapper for the IN x86 instruction.
- *
- * @param port_addr target port address
- *
- * @return the value returned by the given port
- */
-uint8_t inb(uint32_t port_addr);
-uint16_t inw(uint32_t port_addr);
-uint32_t inl(uint32_t port_addr);
+void initPICs(void);
 
 /**
- * @brief Wait 1 to 4 microseconds by outputting 0 to an unused port (0x80).
+ * @brief Sends the End Of Interrupt (EOI) command to the PIC.
+ *
+ * @param irq_num the IRQ number to send the EOI command to
  */
-void io_wait(void);
+void sendEOI(uint8_t irq_num);
 
 
 
-#endif //TESTOS_LOWIO_H
+#endif //TESTOS_PIC_H

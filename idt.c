@@ -21,6 +21,7 @@
 #include "BinaryStructs.h"
 #include "CLibs/stdio.h"
 #include "Gdt.h"
+#include "Utils/General.h"
 #include <stdbool.h>
 
 static bool idt_ready = false;
@@ -29,6 +30,7 @@ __attribute__((aligned(0x10)))
 static GateDescriptor32 idt[256]; // Create an array of IDT entries; aligned for performance
 static IDTR32 idtr;
 extern void *isrStubTable[];
+extern funcptr_t(asm_interruptIgnore);
 
 /**
  * @brief Sets the descriptor for the given vector.
@@ -36,21 +38,22 @@ extern void *isrStubTable[];
  * @param vector the vector number
  * @param isr the address of the ISR
  */
-static void idtSetDescriptor(uint8_t vector, void *isr);
+static void idtSetDescriptor(int vector, void *isr);
 
 void lockNLoadIDT(void) {
 	if (idt_ready) {
-		printf("IDT already prepared. Aborting...\n");
-
 		return;
 	}
 
-	for (uint8_t vector = 0; vector < 32; vector++) {
+	for (int vector = 0; vector < 32; vector++) {
 		idtSetDescriptor(vector, isrStubTable[vector]);
+	}
+	for (int vector = 32; vector < 256; vector++) {
+		idtSetDescriptor(vector, &asm_interruptIgnore);
 	}
 
 	idtr.offset = (uintptr_t) &idt[0];
-	idtr.size = sizeof(idt) / sizeof(GateDescriptor32) - 1;
+	idtr.size = 256 * sizeof(GateDescriptor32) - 1;
 
 	__asm__ volatile (
 			"lidt    %0"
@@ -59,12 +62,10 @@ void lockNLoadIDT(void) {
 			);
 	__asm__("sti");
 
-	printf("IDT and interrupt flag ready\n");
-
 	idt_ready = true;
 }
 
-static void idtSetDescriptor(uint8_t vector, void *isr) {
+static void idtSetDescriptor(int vector, void *isr) {
 	GateDescriptor32 *descriptor = &idt[vector];
 
 	descriptor->isr_low        = (uintptr_t) isr & 0xFFFF;

@@ -22,7 +22,7 @@ LDPARAMS := -m elf_i386 $(WARN_LINK_ERR) -z noexecstack
 
 objects = CLibs/stdio.o \
 	Utils/LowIo.o Utils/MemReadWrite.o \
-	C_runtime.o Gdt.o Idt.o InterruptHandlers.o InterruptStubs.o Kernel.o KernelUtils.o Loader.o
+	C_runtime.o Gdt.o Idt.o InterruptHandlers.o InterruptStubs.o Kernel.o KernelUtils.o Loader.o Pic.o
 
 %.o: %.c
 	gcc $(GCCPARAMS) -o $@ -c $^

@@ -20,6 +20,7 @@
 #include "Gdt.h"
 #include "CLibs/stdio.h"
 #include "Idt.h"
+#include "Pic.h"
 #include <stdbool.h>
 #include <stdnoreturn.h>
 
@@ -52,8 +53,17 @@ noreturn void kernelMain(__attribute__((unused)) void const *multiboot_struct,
 	resetScreen();
 	printf("TestOS\n\n");
 
+	// For randomizing stack tests
+	//unsigned int a,b,c,d;
+	//__asm__ volatile ("cpuid" : "=a" (a), "=b" (b), "=c" (c), "=d" (d) : "a" (0x00));
+	//printf("CPUID: %u %u %u %u\n", a, b, c, d);
+
+	printf("Initializing GDT...\n");
 	lockNLoadGDT();
+	printf("Initializing IDT...\n");
 	lockNLoadIDT();
+	printf("Initializing PICs...\n");
+	initPICs(); //fixme #GP Fault if enabled
 
 
 

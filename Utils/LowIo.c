@@ -19,25 +19,62 @@
 
 #include "LowIo.h"
 
-void out(uint32_t port_addr, uint32_t value) {
-	__asm__(
+void outb(uint16_t port_addr, uint8_t value) {
+	__asm__ volatile (
 			"out     %0, %1;"
 			:
-			: "d" (port_addr), "a" (value)
+			: "Nd" (port_addr), "a" (value)
+			: "memory"
+			);
+}
+void outw(uint16_t port_addr, uint16_t value) {
+	__asm__ volatile (
+			"out     %0, %1;"
+			:
+			: "Nd" (port_addr), "a" (value)
+			: "memory"
+			);
+}
+void outl(uint16_t port_addr, uint32_t value) {
+	__asm__ volatile (
+			"out     %0, %1;"
+			:
+			: "Nd" (port_addr), "a" (value)
+			: "memory"
 			);
 }
 
-uint32_t in(uint32_t port_addr) {
-	uint32_t value = 0;
-	__asm__(
+uint8_t inb(uint32_t port_addr) {
+	uint8_t value = 0;
+	__asm__ volatile (
 			"in      %0, %1;"
 			: "=a" (value)
-			: "d" (port_addr)
+			: "Nd" (port_addr)
+			);
+
+	return value;
+}
+uint16_t inw(uint32_t port_addr) {
+	uint16_t value = 0;
+	__asm__ volatile (
+			"in      %0, %1;"
+			: "=a" (value)
+			: "Nd" (port_addr)
+			);
+
+	return value;
+}
+uint32_t inl(uint32_t port_addr) {
+	uint32_t value = 0;
+	__asm__ volatile (
+			"in      %0, %1;"
+			: "=a" (value)
+			: "Nd" (port_addr)
 			);
 
 	return value;
 }
 
 void io_wait(void) {
-	out(0x80, 0);
+	outb(0x80, 0);
 }

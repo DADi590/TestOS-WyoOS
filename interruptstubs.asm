@@ -17,28 +17,60 @@
 ; specific language governing permissions and limitations
 ; under the License.
 
+
+%macro SAVE_REGS 0
+    pushad
+    push ds
+    push es
+    push fs
+    push gs
+%endmacro
+%macro RESTORE_REGS 0
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popad
+%endmacro
+
+%macro IsrErrStub 1
+isrStub%+%1:
+	; Can't use SAVE_REGS and RESTORE_REGS here because the error code is pushed onto the stack
+	; todo use SAVE_REGS and RESTORE_REGS and push the error code onto the stack one more time manually
+	; (meaning, get the error code from the stack after SAVE_REGS and push it again)
+	mov dword [number], %1
+	push dword [number]
+	call exceptionHandlerErr
+	add esp, 8 ; remove the pushed number and the error code
+	iret
+%endmacro
+%macro IsrNoErrStub 1
+isrStub%+%1:
+	SAVE_REGS
+	mov dword [number], %1
+	push dword [number]
+	call exceptionHandlerNoErr
+	add esp, 4 ; remove the pushed number
+	RESTORE_REGS
+	iret
+%endmacro
+
+
 SECTION .text
+	extern interruptIgnore
 	extern interruptHandler
-	extern exceptionHandler
+	extern exceptionHandlerNoErr
+	extern exceptionHandlerErr
 	global isrStubTable
+	global asm_interruptIgnore
 
-	%macro IsrErrStub 1
-    isrStub%+%1:
-    	mov dword [number], %1
-    	push dword [number]
-        call exceptionHandler
-        add esp, 4 ; remove the pushed number
-        iret
-    %endmacro
-	%macro IsrNoErrStub 1
-    isrStub%+%1:
-    	mov dword [number], %1
-    	push dword [number]
-        call exceptionHandler
-        add esp, 4 ; remove the pushed number
-        iret
-    %endmacro
+	asm_interruptIgnore:
+		SAVE_REGS
+		call interruptIgnore
+		RESTORE_REGS
+		iret
 
+	; Err vs NoErr means that the ISR will push an error code onto the stack vs not pushing
 	IsrNoErrStub  0
 	IsrNoErrStub  1
 	IsrNoErrStub  2

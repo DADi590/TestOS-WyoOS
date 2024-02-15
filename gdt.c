@@ -32,8 +32,6 @@ bool gdt_ready = false;
 
 void lockNLoadGDT(void) {
 	if (gdt_ready) {
-		printf("GDT already prepared. Aborting...\n");
-
 		return;
 	}
 
@@ -80,8 +78,6 @@ void lockNLoadGDT(void) {
 			:
 			:
 			);
-
-	printf("GDT ready\n");
 
 	gdt_ready = true;
 }

@@ -18,15 +18,38 @@
 // under the License.
 
 #include "CLibs/stdio.h"
+#include "Pic.h"
 
-void interruptHandler(uint8_t int_num) {
-	printf("Interrupt detected. IRQ %u\n", int_num);
+void interruptIgnore(void) {
+	printf("Interrupt ignored\n");
 
-	__asm__ volatile ("cli; hlt"); // Completely hangs the computer
+	//sendEOI((uint8_t) int_num); // Send the EOI command to the PIC
+
+	//__asm__ volatile ("cli; hlt"); // Completely hangs the computer
 }
 
-void exceptionHandler(uint32_t int_num) {
+void interruptHandler(uint32_t int_num) {
+	printf("Interrupt detected. IRQ %u\n", int_num);
+
+	sendEOI((uint8_t) int_num); // Send the EOI command to the PIC
+
+	//__asm__ volatile ("cli; hlt"); // Completely hangs the computer
+}
+
+void exceptionHandlerNoErr(uint32_t int_num) {
 	printf("Exception detected. Number: %u\n", int_num);
 
-	__asm__ volatile ("cli; hlt"); // Completely hangs the computer
+	sendEOI((uint8_t) int_num); // Send the EOI command to the PIC
+
+	//__asm__ volatile ("cli; hlt"); // Completely hangs the computer
+}
+
+void exceptionHandlerErr(uint32_t int_num, uint32_t err_code) {
+	printf("Exception detected. Number: %u. Error code: %u\n", int_num, err_code);
+
+	sendEOI((uint8_t) int_num); // Send the EOI command to the PIC
+
+	if (int_num == 13) {
+		__asm__ volatile ("cli; hlt"); // Completely hangs the computer
+	}
 }
