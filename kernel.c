@@ -50,7 +50,7 @@ noreturn void kernelMain(__attribute__((unused)) void const *multiboot_struct,
 	// todo GRUB also provides a memory map, whatever that is - go see about it.
 
 	resetScreen();
-	printf("TestOS\n\n");
+	printf("TestOS - Edw590\n\n");
 
 	// For randomizing stack tests
 	//unsigned int a,b,c,d;
@@ -62,6 +62,8 @@ noreturn void kernelMain(__attribute__((unused)) void const *multiboot_struct,
 
 	printf("Initializing IDT and PICs...\n");
 	lockNLoadIDTAndPICs();
+
+	printf("Type things to see them on the screen.\n");
 
 
 
